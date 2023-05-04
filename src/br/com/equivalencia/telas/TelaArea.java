@@ -149,6 +149,11 @@ public class TelaArea extends javax.swing.JFrame {
         });
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/equivalencia/imagens/delete.png"))); // NOI18N
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
 
         btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/equivalencia/imagens/edit.png"))); // NOI18N
         btnEditar.addActionListener(new java.awt.event.ActionListener() {
@@ -280,6 +285,34 @@ public class TelaArea extends javax.swing.JFrame {
         // TODO add your handling code here:
         setar_campo();
     }//GEN-LAST:event_tblAreaMouseClicked
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        // TODO add your handling code here:
+        int confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja excluir esse registro", "Atenção", JOptionPane.YES_NO_OPTION);
+        if(confirma == JOptionPane.YES_OPTION){
+           String sql = "delete from tb_area_tecnologica where id_area=?";
+            try {
+                pst = conexao.prepareStatement(sql);
+                pst.setString(1, txtIdArea.getText());
+                int apagado = pst.executeUpdate();
+                if(apagado > 0){
+                    JOptionPane.showMessageDialog(null, "Área tecnologica exlcuida com sucesso!");
+                    txtIdArea.setText(null);
+                    txtNomeArea.setText(null);
+                    btnExcluir.setEnabled(false);
+                    btnExcluir.setEnabled(false);
+                    txtNomeArea.requestFocus();
+                    btnCadastrar.setEnabled(true);
+
+                }
+            } catch (java.sql.SQLIntegrityConstraintViolationException e) {
+               JOptionPane.showMessageDialog(null, "Erro ao exluir area tecnologica \n" +
+               "Existe um curso cadastrado para esta area tecnologica");   
+            }catch (Exception e1){
+                JOptionPane.showMessageDialog(null, e1);
+            }
+        }
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
     /**
      * @param args the command line arguments
