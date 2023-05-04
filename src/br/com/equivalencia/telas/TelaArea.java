@@ -55,9 +55,14 @@ public class TelaArea extends javax.swing.JFrame {
           } else {
               int adicionado = pst.executeUpdate();
               
-              if (adicionado >0){
+              if (adicionado > 0){
                   JOptionPane.showMessageDialog(null, "Area Tecnologica alterada com sucesso!");
-            
+                  txtIdArea.requestFocus();
+                  txtNomeArea.setText(null);
+                  txtIdArea.setText(null);
+                  btnCadastrar.setEnabled(true);
+                  btnEditar.setEnabled(false);
+                  btnExcluir.setEnabled(false);
               }
           }
       } catch (Exception e) {
@@ -91,12 +96,16 @@ public class TelaArea extends javax.swing.JFrame {
         int setar = tblArea.getSelectedRow();
         txtIdArea.setText(tblArea.getModel().getValueAt(setar, 0).toString());
         txtNomeArea.setText(tblArea.getModel().getValueAt(setar, 1).toString());
+        btnCadastrar.setEnabled(false);
+        btnEditar.setEnabled(true);
+        btnExcluir.setEnabled(true);
     }
     
     public TelaArea() {
         initComponents();
         conexao = ModuloConexao.conector();
-        
+        btnEditar.setEnabled(false);
+        btnExcluir.setEnabled(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -246,6 +255,7 @@ public class TelaArea extends javax.swing.JFrame {
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
       adicionar ();
+      pesquisar_area();
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
     private void txtNomeAreaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNomeAreaKeyPressed
@@ -258,6 +268,7 @@ public class TelaArea extends javax.swing.JFrame {
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         // TODO add your handling code here:
         alterar();
+        pesquisar_area();
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void txtPesquisarAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPesquisarAreaKeyReleased
