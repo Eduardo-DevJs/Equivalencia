@@ -97,11 +97,47 @@ public class TelaCursos extends javax.swing.JFrame {
         btnExcluir.setEnabled(true);
     }
     
+    //Metodo para carregar o combo box
+    private void pesquisar_area(){
+        String sql = "select * from tb_area_tecnologica";
+        
+        try {
+            pst = conexao.prepareStatement(sql);
+            rs = pst.executeQuery();
+            
+            while(rs.next()){
+                cboArea.addItem(rs.getString(2));
+            }
+        } catch (Exception e) {
+            
+        }
+    }
+    
+    // Metodo para setar o ID da area selecionada na txtIdArea
+    
+    private void setar_area(){
+        String sql = "select * from tb_area_tecnologica where nome_area=?";
+        
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, cboArea.getSelectedItem().toString());
+            rs = pst.executeQuery();
+            
+            if(rs.next()){
+                txtIdArea.setText(rs.getString(1));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+    
     public TelaCursos() {
         initComponents();
         conexao = ModuloConexao.conector();
         btnEditar.setEnabled(false);
         btnExcluir.setEnabled(false);
+        pesquisar_curso();
+        pesquisar_area();
     }
 
     @SuppressWarnings("unchecked")
@@ -123,8 +159,8 @@ public class TelaCursos extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         txtPesquisarCurso = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        txtIdCursos = new javax.swing.JTextField();
-        cboCursos = new javax.swing.JComboBox<>();
+        txtIdArea = new javax.swing.JTextField();
+        cboArea = new javax.swing.JComboBox<>();
 
         jLabel1.setText("jLabel1");
 
@@ -136,6 +172,11 @@ public class TelaCursos extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jList1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formMouseClicked(evt);
+            }
+        });
 
         jLabel2.setText("ID:");
 
@@ -209,9 +250,13 @@ public class TelaCursos extends javax.swing.JFrame {
 
         jLabel5.setText("ID Area Tec:");
 
-        txtIdCursos.setEnabled(false);
+        txtIdArea.setEnabled(false);
 
-        cboCursos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboArea.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cboAreaFocusLost(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -235,9 +280,9 @@ public class TelaCursos extends javax.swing.JFrame {
                             .addComponent(txtIdCurso, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addGroup(layout.createSequentialGroup()
-                                    .addComponent(txtIdCursos, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtIdArea, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(cboCursos, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(cboArea, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(txtNomeCurso)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -270,8 +315,8 @@ public class TelaCursos extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(txtIdCursos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cboCursos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtIdArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(52, 52, 52)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnExcluir)
@@ -344,9 +389,17 @@ public class TelaCursos extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNomeCursoActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    private void cboAreaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cboAreaFocusLost
+        // TODO add your handling code here:
+        setar_area();
+    }//GEN-LAST:event_cboAreaFocusLost
+
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+        // TODO add your handling code here:
+        setar_area();
+    }//GEN-LAST:event_formMouseClicked
+
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -384,7 +437,7 @@ public class TelaCursos extends javax.swing.JFrame {
     private javax.swing.JButton btnCadastrar;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnExcluir;
-    private javax.swing.JComboBox<String> cboCursos;
+    private javax.swing.JComboBox<String> cboArea;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -394,8 +447,8 @@ public class TelaCursos extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tblCursos;
+    private javax.swing.JTextField txtIdArea;
     private javax.swing.JTextField txtIdCurso;
-    private javax.swing.JTextField txtIdCursos;
     private javax.swing.JTextField txtNomeCurso;
     private javax.swing.JTextField txtPesquisarCurso;
     // End of variables declaration//GEN-END:variables
